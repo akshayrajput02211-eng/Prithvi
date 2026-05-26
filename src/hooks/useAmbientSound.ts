@@ -12,63 +12,67 @@ const TARGET_VOLUME = 0.3;
 export function useAmbientSound(worldId?: string) {
   const storeWorld = useWorldStore((state) => state.currentWorld);
   const isSoundOn = useWorldStore((state) => state.isSoundOn);
-
   const currentWorld = worldId ?? storeWorld;
 
-  const currentSoundRef = useRef<Howl | null>(null);
-  const currentFileRef = useRef<string | null>(null);
+  const soundRef = useRef<Howl | null>(null);
+  const fileRef = useRef<string | null>(null);
 
   useEffect(() => {
     const world = WORLDS.find((item) => item.id === currentWorld);
-    const soundFile = world?.soundFile ?? 'space-ambient.mp3';
-    const soundSrc = `/sounds/${soundFile}`;
+    const soundSrc = `/sounds/${world?.soundFile ?? 'space-ambient.mp3'}`;
 
-    const fadeOutCurrent = () => {
-      const currentSound = currentSoundRef.current;
+    const fadeOut = () => {
+      const sound = soundRef.current;
+      if (!sound) return;
 
-      if (!currentSound) return;
-
-      currentSound.fade(currentSound.volume(), 0, FADE_DURATION);
-
+      sound.fade(sound.volume(), 0, FADE_DURATION);
       window.setTimeout(() => {
-        currentSound.stop();
-        currentSound.unload();
+        sound.stop();
+        sound.unload();
       }, FADE_DURATION);
     };
 
     if (!isSoundOn) {
-      fadeOutCurrent();
-      currentSoundRef.current = null;
-      currentFileRef.current = null;
+      fadeOut();
+      soundRef.current = null;
+      fileRef.current = null;
       return;
     }
 
-    if (currentFileRef.current === soundSrc && currentSoundRef.current) {
-      return;
-    }
+    if (fileRef.current === soundSrc && soundRef.current) return;
 
-    fadeOutCurrent();
+    let cancelled = false;
 
-    const nextSound = new Howl({
-      src: [soundSrc],
-      loop: true,
-      volume: 0,
-      html5: true,
-    });
+    fetch(soundSrc, { method: 'HEAD' })
+      .then((res) => {
+        if (!res.ok || cancelled) return;
 
-    nextSound.play();
-    nextSound.fade(0, TARGET_VOLUME, FADE_DURATION);
+        fadeOut();
 
-    currentSoundRef.current = nextSound;
-    currentFileRef.current = soundSrc;
+        const nextSound = new Howl({
+          src: [soundSrc],
+          loop: true,
+          volume: 0,
+          html5: true,
+        });
+
+        nextSound.once('load', () => {
+          if (cancelled) return;
+          nextSound.play();
+          nextSound.fade(0, TARGET_VOLUME, FADE_DURATION);
+        });
+
+        nextSound.once('loaderror', () => {
+          nextSound.unload();
+        });
+
+        soundRef.current = nextSound;
+        fileRef.current = soundSrc;
+      })
+      .catch(() => undefined);
 
     return () => {
-      nextSound.fade(nextSound.volume(), 0, FADE_DURATION);
-
-      window.setTimeout(() => {
-        nextSound.stop();
-        nextSound.unload();
-      }, FADE_DURATION);
+      cancelled = true;
     };
   }, [currentWorld, isSoundOn]);
 }

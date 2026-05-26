@@ -1,12 +1,9 @@
 'use client';
 
 import { AnimatePresence, motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
 
 import { useWorldStore } from '@/store/worldStore';
-
-const EXPAND_DURATION = 0.6;
-const HOLD_DURATION = 0.2;
-const COLLAPSE_DURATION = 0.5;
 
 export default function CircleWipe() {
   const isTransitioning = useWorldStore((state) => state.isTransitioning);
@@ -14,40 +11,43 @@ export default function CircleWipe() {
   const transitionOrigin = useWorldStore((state) => state.transitionOrigin);
   const endTransition = useWorldStore((state) => state.endTransition);
 
-  const originX = transitionOrigin.x * 100;
-  const originY = transitionOrigin.y * 100;
+  const [phase, setPhase] = useState<'expand' | 'collapse'>('expand');
+
+  useEffect(() => {
+    if (!isTransitioning) return;
+
+    setPhase('expand');
+
+    const collapseTimer = window.setTimeout(() => setPhase('collapse'), 820);
+    const endTimer = window.setTimeout(endTransition, 1320);
+
+    return () => {
+      window.clearTimeout(collapseTimer);
+      window.clearTimeout(endTimer);
+    };
+  }, [endTransition, isTransitioning]);
+
+  const x = transitionOrigin.x * 100;
+  const y = transitionOrigin.y * 100;
 
   return (
     <AnimatePresence>
       {isTransitioning && (
         <motion.div
-          key="circle-wipe"
-          className="fixed inset-0 z-[9998] pointer-events-none"
-          style={{
-            backgroundColor: transitionColor,
-          }}
-          initial={{
-            clipPath: `circle(0% at ${originX}% ${originY}%)`,
-            opacity: 1,
-          }}
+          className="pointer-events-none fixed inset-0 z-[9998]"
+          style={{ backgroundColor: transitionColor }}
+          initial={{ clipPath: `circle(0% at ${x}% ${y}%)` }}
           animate={{
-            clipPath: [
-              `circle(0% at ${originX}% ${originY}%)`,
-              `circle(150% at ${originX}% ${originY}%)`,
-              `circle(150% at ${originX}% ${originY}%)`,
-              `circle(0% at ${originX}% ${originY}%)`,
-            ],
+            clipPath:
+              phase === 'expand'
+                ? `circle(150% at ${x}% ${y}%)`
+                : `circle(0% at ${x}% ${y}%)`,
           }}
+          exit={{ clipPath: `circle(0% at ${x}% ${y}%)` }}
           transition={{
-            duration: EXPAND_DURATION + HOLD_DURATION + COLLAPSE_DURATION,
-            times: [0, 0.46, 0.62, 1],
-            ease: [
-              [0.76, 0, 0.24, 1],
-              'linear',
-              'easeIn',
-            ],
+            duration: phase === 'expand' ? 0.6 : 0.5,
+            ease: phase === 'expand' ? [0.76, 0, 0.24, 1] : 'easeIn',
           }}
-          onAnimationComplete={endTransition}
         />
       )}
     </AnimatePresence>

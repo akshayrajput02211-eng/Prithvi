@@ -16,12 +16,11 @@ import {
   Sun,
   TreePine,
   UserRound,
-  Volume2,
-  VolumeX,
   Waves,
   type LucideIcon,
 } from 'lucide-react';
 
+import SoundToggle from '@/components/ui/SoundToggle';
 import { WORLDS } from '@/lib/worlds.config';
 import { useWorldStore } from '@/store/worldStore';
 
@@ -32,9 +31,8 @@ type NavItem = {
 
 type SidebarItem = {
   label: string;
-  href?: string;
+  href: string;
   icon: LucideIcon;
-  onClick?: () => void;
 };
 
 const navItems: NavItem[] = [
@@ -43,6 +41,13 @@ const navItems: NavItem[] = [
   { label: 'ABOUT', href: '#about' },
   { label: 'PROJECTS', href: '#projects' },
   { label: 'CONTACT', href: '#contact' },
+];
+
+const sidebarItems: SidebarItem[] = [
+  { label: 'Home', href: '/', icon: Home },
+  { label: 'Worlds', href: '#worlds', icon: Grid3X3 },
+  { label: 'About', href: '#about', icon: UserRound },
+  { label: 'Contact', href: '#contact', icon: Mail },
 ];
 
 const worldIcons: Record<string, LucideIcon> = {
@@ -60,9 +65,6 @@ const worldIcons: Record<string, LucideIcon> = {
 
 export default function Navbar() {
   const currentWorld = useWorldStore((state) => state.currentWorld);
-  const isSoundOn = useWorldStore((state) => state.isSoundOn);
-  const toggleSound = useWorldStore((state) => state.toggleSound);
-
   const [scrollProgress, setScrollProgress] = useState(0);
 
   const activeWorld = useMemo(() => {
@@ -71,18 +73,6 @@ export default function Navbar() {
 
   const accentColor = activeWorld?.accentColor ?? '#c8f020';
   const WorldIcon = worldIcons[currentWorld] ?? Sparkles;
-
-  const sidebarItems: SidebarItem[] = [
-    { label: 'Home', href: '/', icon: Home },
-    { label: 'Worlds', href: '#worlds', icon: Grid3X3 },
-    { label: 'About', href: '#about', icon: UserRound },
-    { label: 'Contact', href: '#contact', icon: Mail },
-    {
-      label: isSoundOn ? 'Sound On' : 'Sound Off',
-      icon: isSoundOn ? Volume2 : VolumeX,
-      onClick: toggleSound,
-    },
-  ];
 
   useEffect(() => {
     const updateProgress = () => {
@@ -111,7 +101,9 @@ export default function Navbar() {
           <a
             href="/"
             className="text-[24px] font-medium uppercase leading-none tracking-[0.48em]"
-            style={{ fontFamily: 'var(--font-orbitron), Orbitron, sans-serif' }}
+            style={{
+              fontFamily: 'var(--font-orbitron), Arial, Helvetica, sans-serif',
+            }}
           >
             PRITHVI
           </a>
@@ -125,6 +117,7 @@ export default function Navbar() {
                   key={item.label}
                   href={item.href}
                   className="group relative flex items-center gap-3 overflow-hidden pb-2 text-[13px] font-medium uppercase tracking-[0.18em] text-white transition-colors duration-300 hover:text-[#c8f020]"
+                  data-cursor
                 >
                   {isHome && (
                     <span className="h-1.5 w-1.5 rounded-full bg-[#c8f020]" />
@@ -143,6 +136,7 @@ export default function Navbar() {
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.98 }}
             className="group hidden items-center gap-4 rounded-full border border-white/55 px-7 py-3 text-[13px] font-medium tracking-wide text-white transition-colors duration-300 hover:bg-white hover:text-black md:flex"
+            data-cursor
           >
             <span>Enter A World</span>
 
@@ -171,11 +165,18 @@ export default function Navbar() {
               ease: 'easeInOut',
             }}
             className="relative z-10 mb-16 grid h-14 w-14 place-items-center rounded-full border bg-black/60"
-            style={{ borderColor: accentColor, color: accentColor }}
+            style={{
+              borderColor: accentColor,
+              color: accentColor,
+            }}
           >
             <motion.div
               animate={{ rotate: 360 }}
-              transition={{ duration: 14, repeat: Infinity, ease: 'linear' }}
+              transition={{
+                duration: 14,
+                repeat: Infinity,
+                ease: 'linear',
+              }}
             >
               <WorldIcon size={25} strokeWidth={1.8} />
             </motion.div>
@@ -185,48 +186,33 @@ export default function Navbar() {
             {sidebarItems.map((item) => {
               const Icon = item.icon;
 
-              const content = (
-                <motion.span
-                  whileHover={{ scale: 1.18 }}
-                  whileTap={{ scale: 0.94 }}
-                  className="group relative grid h-9 w-9 place-items-center rounded-full text-white/85 transition-colors duration-300 hover:text-white"
-                >
-                  <Icon size={22} strokeWidth={1.9} />
-
-                  <span
-                    className="pointer-events-none absolute left-14 top-1/2 -translate-y-1/2 rounded-full border border-white/10 bg-black/80 px-4 py-2 text-[11px] font-medium uppercase tracking-[0.16em] text-white opacity-0 shadow-2xl backdrop-blur-xl transition-all duration-300 group-hover:left-16 group-hover:opacity-100"
-                    style={{ borderColor: `${accentColor}55` }}
-                  >
-                    {item.label}
-                  </span>
-                </motion.span>
-              );
-
-              if (item.onClick) {
-                return (
-                  <button
-                    key={item.label}
-                    type="button"
-                    onClick={item.onClick}
-                    aria-label={item.label}
-                    className="relative"
-                  >
-                    {content}
-                  </button>
-                );
-              }
-
               return (
                 <a
                   key={item.label}
                   href={item.href}
                   aria-label={item.label}
                   className="relative"
+                  data-cursor
                 >
-                  {content}
+                  <motion.span
+                    whileHover={{ scale: 1.18 }}
+                    whileTap={{ scale: 0.94 }}
+                    className="group relative grid h-9 w-9 place-items-center rounded-full text-white/85 transition-colors duration-300 hover:text-white"
+                  >
+                    <Icon size={22} strokeWidth={1.9} />
+
+                    <span
+                      className="pointer-events-none absolute left-14 top-1/2 -translate-y-1/2 rounded-full border border-white/10 bg-black/80 px-4 py-2 text-[11px] font-medium uppercase tracking-[0.16em] text-white opacity-0 shadow-2xl backdrop-blur-xl transition-all duration-300 group-hover:left-16 group-hover:opacity-100"
+                      style={{ borderColor: `${accentColor}55` }}
+                    >
+                      {item.label}
+                    </span>
+                  </motion.span>
                 </a>
               );
             })}
+
+            <SoundToggle />
           </div>
         </div>
       </aside>

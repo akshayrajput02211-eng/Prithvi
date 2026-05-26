@@ -1,27 +1,14 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import Lenis from '@studio-freight/lenis';
+import { useEffect, useRef } from 'react';
+import Lenis from 'lenis';
 
 export let lenis: Lenis | null = null;
-
-type LenisScrollData = {
-  scroll: number;
-  limit: number;
-  progress: number;
-  isScrolling: boolean;
-};
-
-type LenisScrollCallback = (
-  data: LenisScrollData,
-  instance: Lenis
-) => void;
 
 let rafId: number | null = null;
 let users = 0;
 
-const easing = (t: number) =>
-  Math.min(1, 1.001 - Math.pow(2, -10 * t));
+const easing = (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t));
 
 function raf(time: number) {
   lenis?.raf(time);
@@ -40,47 +27,33 @@ export function initLenis() {
     });
   }
 
-  if (rafId === null) {
-    rafId = requestAnimationFrame(raf);
-  }
+  if (rafId === null) rafId = requestAnimationFrame(raf);
 
   return lenis;
 }
 
 function destroyLenis() {
-  if (rafId !== null) {
-    cancelAnimationFrame(rafId);
-    rafId = null;
-  }
-
+  if (rafId !== null) cancelAnimationFrame(rafId);
+  rafId = null;
   lenis?.destroy();
   lenis = null;
 }
 
 export function useLenis() {
-  const [instance, setInstance] = useState<Lenis | null>(null);
-
   useEffect(() => {
     users += 1;
-
-    const currentLenis = initLenis();
-    setInstance(currentLenis);
+    initLenis();
 
     return () => {
       users = Math.max(0, users - 1);
-
-      if (users === 0) {
-        destroyLenis();
-      }
-
-      setInstance(null);
+      if (users === 0) destroyLenis();
     };
   }, []);
 
-  return instance;
+  return lenis;
 }
 
-export function useLenisScroll(callback: LenisScrollCallback) {
+export function useLenisScroll(callback: (instance: Lenis) => void) {
   const callbackRef = useRef(callback);
 
   useEffect(() => {
@@ -89,33 +62,18 @@ export function useLenisScroll(callback: LenisScrollCallback) {
 
   useEffect(() => {
     users += 1;
-
     const currentLenis = initLenis();
 
     if (!currentLenis) return;
 
-    const handleScroll = (instance: Lenis) => {
-      callbackRef.current(
-        {
-          scroll: instance.scroll,
-          limit: instance.limit,
-          progress: instance.progress,
-          isScrolling: instance.isScrolling,
-        },
-        instance
-      );
-    };
+    const handleScroll = (instance: Lenis) => callbackRef.current(instance);
 
     currentLenis.on('scroll', handleScroll);
 
     return () => {
       currentLenis.off('scroll', handleScroll);
-
       users = Math.max(0, users - 1);
-
-      if (users === 0) {
-        destroyLenis();
-      }
+      if (users === 0) destroyLenis();
     };
   }, []);
 }

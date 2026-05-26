@@ -2,36 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-  font-family: 'Satoshi';
-  src: url('/fonts/Satoshi-Regular.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Satoshi';
-  src: url('/fonts/Satoshi-Medium.woff2') format('woff2');
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Satoshi';
-  src: url('/fonts/Satoshi-Bold.woff2') format('woff2');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
 :root {
   --world-primary: #7c3aed;
   --world-accent: #a855f7;
   --world-bg: #050008;
   --world-text: #ffffff;
   --world-cursor: #a855f7;
+
+  --font-orbitron: Arial, Helvetica, sans-serif;
+  --font-poppins: Arial, Helvetica, sans-serif;
+  --font-jakarta: Arial, Helvetica, sans-serif;
+  --font-mono: Consolas, 'Courier New', monospace;
+  --font-montserrat: Arial, Helvetica, sans-serif;
+  --font-bebas: Arial, Helvetica, sans-serif;
   --world-font-heading: Arial, Helvetica, sans-serif;
 }
 
@@ -55,7 +38,7 @@ body {
   background: var(--world-bg);
   color: var(--world-text);
   cursor: none;
-  font-family: 'Satoshi', Arial, Helvetica, sans-serif;
+  font-family: var(--font-jakarta);
   text-rendering: geometricPrecision;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -270,4 +253,9 @@ svg {
 
 .animate-count-rotate {
   animation: count-rotate 120s linear infinite;
+}
+
+.shooting-star {
+  animation: shooting-star 5.5s ease-in-out infinite;
+  animation-delay: 1.2s;
 }

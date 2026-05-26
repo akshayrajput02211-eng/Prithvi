@@ -6,6 +6,8 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import {
   ChevronDown,
+  Cpu,
+  Flame,
   Mountain,
   Play,
   Recycle,
@@ -14,8 +16,6 @@ import {
   Snowflake,
   TreePine,
   Waves,
-  Flame,
-  Cpu,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -42,6 +42,7 @@ export default function HeroSection() {
   const startTransition = useCircleTransition();
 
   const sectionRef = useRef<HTMLElement | null>(null);
+  const earthWrapRef = useRef<HTMLDivElement | null>(null);
   const earthRef = useRef<HTMLImageElement | null>(null);
   const star1Ref = useRef<HTMLImageElement | null>(null);
   const star2Ref = useRef<HTMLImageElement | null>(null);
@@ -82,10 +83,11 @@ export default function HeroSection() {
         duration: 120,
         repeat: -1,
         ease: 'none',
+        transformOrigin: '50% 50%',
       });
 
       gsap.fromTo(
-        earthRef.current,
+        earthWrapRef.current,
         { scale: 1 },
         {
           scale: 0.7,
@@ -143,6 +145,7 @@ export default function HeroSection() {
   return (
     <section
       ref={sectionRef}
+      id="worlds"
       className="relative min-h-screen overflow-hidden bg-black text-white"
     >
       <img
@@ -179,12 +182,17 @@ export default function HeroSection() {
 
       <div className="absolute left-1/2 top-[18%] h-[46vw] max-h-[720px] w-[46vw] max-w-[720px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(255,204,102,0.34)_0%,rgba(255,204,102,0.08)_42%,transparent_70%)] blur-2xl" />
 
-      <img
-        ref={earthRef}
-        src="/images/home/earth.png"
-        alt="Earth"
-        className="absolute left-1/2 top-[8%] z-10 w-[70vw] max-w-[1080px] -translate-x-1/2 select-none object-contain"
-      />
+      <div
+        ref={earthWrapRef}
+        className="absolute left-1/2 top-[8%] z-10 w-[70vw] max-w-[1080px] -translate-x-1/2"
+      >
+        <img
+          ref={earthRef}
+          src="/images/home/earth.png"
+          alt="Earth"
+          className="w-full select-none object-contain"
+        />
+      </div>
 
       <span className="shooting-star absolute left-[18%] top-[18%] z-20 h-px w-28 rotate-[28deg] bg-gradient-to-r from-transparent via-white to-transparent opacity-0" />
 
@@ -207,7 +215,9 @@ export default function HeroSection() {
 
         <h1
           className="overflow-hidden bg-gradient-to-r from-white via-[#f7d77a] to-white bg-clip-text text-[clamp(4.5rem,11vw,12rem)] font-semibold leading-none tracking-[0.28em] text-transparent"
-          style={{ fontFamily: 'var(--font-orbitron), Orbitron, sans-serif' }}
+          style={{
+            fontFamily: 'var(--font-orbitron), Arial, Helvetica, sans-serif',
+          }}
         >
           {'PRITHVI'.split('').map((char) => (
             <span key={char} className="hero-title-char inline-block">
@@ -222,6 +232,7 @@ export default function HeroSection() {
         </p>
 
         <motion.button
+          type="button"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.96 }}
           className="hero-fade mt-8 inline-flex items-center gap-3 rounded-full border border-white/20 bg-white/5 px-7 py-4 text-sm font-medium text-white shadow-2xl backdrop-blur-xl"
@@ -242,7 +253,7 @@ export default function HeroSection() {
           {WORLDS.map((world) => {
             const Icon = worldIcons[world.id];
             const isFocused = hoveredWorld === world.id;
-            const isDimmed = hoveredWorld && !isFocused;
+            const isDimmed = hoveredWorld !== null && !isFocused;
 
             return (
               <motion.button
@@ -280,7 +291,7 @@ export default function HeroSection() {
                       boxShadow: `0 0 14px ${world.accentColor}55`,
                     }}
                   >
-                    {Icon && <Icon size={16} />}
+                    {Icon ? <Icon size={16} /> : null}
                   </div>
 
                   <p className="text-sm tracking-[0.18em] text-white/75">
@@ -315,34 +326,6 @@ export default function HeroSection() {
       <p className="absolute bottom-8 right-16 z-40 hidden text-sm text-white/50 lg:block">
         © 2024 PRITHVI. All rights reserved.
       </p>
-
-      <style jsx>{`
-        .shooting-star {
-          animation: shooting-star 5.5s ease-in-out infinite;
-          animation-delay: 1.2s;
-        }
-
-        @keyframes shooting-star {
-          0% {
-            opacity: 0;
-            transform: translate3d(0, 0, 0) rotate(28deg);
-          }
-
-          8% {
-            opacity: 1;
-          }
-
-          18% {
-            opacity: 0;
-            transform: translate3d(520px, 260px, 0) rotate(28deg);
-          }
-
-          100% {
-            opacity: 0;
-            transform: translate3d(520px, 260px, 0) rotate(28deg);
-          }
-        }
-      `}</style>
     </section>
   );
 }
