@@ -58,7 +58,7 @@ export default function HeroSection() {
         { yPercent: 120, opacity: 0 },
         {
           yPercent: 0,
-          opacity: 1,
+          opacity: 0,
           duration: 1,
           stagger: 0.05,
           ease: 'power4.out',
@@ -168,31 +168,47 @@ export default function HeroSection() {
         className="absolute inset-[-5%] h-[110%] w-[110%] object-cover opacity-55"
       />
 
-      <img
-        src="/images/home/blackdust.png"
-        alt=""
-        className="absolute inset-0 h-full w-full object-cover opacity-70"
-      />
+     
 
       <img
         src="/images/home/blackdust2.png"
         alt=""
-        className="absolute inset-0 h-full w-full object-cover opacity-55"
+        className="absolute  inset-0 h-full w-full object-cover opacity-55"
       />
 
       <div className="absolute left-1/2 top-[18%] h-[46vw] max-h-[720px] w-[46vw] max-w-[720px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(255,204,102,0.34)_0%,rgba(255,204,102,0.08)_42%,transparent_70%)] blur-2xl" />
 
-      <div
-        ref={earthWrapRef}
-        className="absolute left-1/2 top-[8%] z-10 w-[70vw] max-w-[1080px] -translate-x-1/2"
-      >
-        <img
-          ref={earthRef}
-          src="/images/home/earth.png"
-          alt="Earth"
-          className="w-full select-none object-contain"
-        />
-      </div>
+  <div
+  className="absolute left-1/2 top-[18%] h-[46vw] max-h-[720px] w-[46vw] max-w-[720px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(255,204,102,0.34)_0%,rgba(255,204,102,0.08)_42%,transparent_70%)] blur-2xl"
+/>
+
+<div
+  ref={earthWrapRef}
+  className="absolute left-1/2 top-[8%] z-10 w-[70vw] max-w-[1080px] -translate-x-1/2"
+>
+  <img
+    ref={earthRef}
+    src="/images/home/earth.png"
+    alt="Earth"
+    className="w-full absolute z-0 select-none object-contain"
+  />
+</div>
+
+<img
+  src="/images/home/blackdust.png"
+  alt=""
+  className="absolute z-10  inset-0 h-full w-full object-cover opacity-70"
+/>
+<img
+  src="/images/home/blackdust.png"
+  alt=""
+  className="absolute z-10  inset-0 h-full w-full object-cover opacity-70"
+/>
+<img
+  src="/images/home/blackdust.png"
+  alt=""
+  className="absolute z-10  inset-0 h-full w-full object-cover opacity-70"
+/>
 
       <span className="shooting-star absolute left-[18%] top-[18%] z-20 h-px w-28 rotate-[28deg] bg-gradient-to-r from-transparent via-white to-transparent opacity-0" />
 
@@ -208,43 +224,39 @@ export default function HeroSection() {
         className="absolute bottom-0 left-0 z-20 h-[38%] w-full object-cover opacity-60"
       />
 
-      <div className="relative z-30 flex min-h-screen flex-col items-center justify-center px-6 pb-28 pt-32 text-center">
-        <p className="hero-fade mb-6 text-xs font-semibold uppercase tracking-[0.35em] text-[#c8f020]">
+      <div className="relative z-30 flex min-h-screen w-full flex-col items-center justify-center px-6 py-20 text-center">
+        <p className="hero-fade mb-9 text-xs font-bold uppercase tracking-[0.35em] text-[#c8f020]">
           One Planet. Infinite Experiences.
         </p>
 
         <h1
-          className="overflow-hidden bg-gradient-to-r from-white via-[#f7d77a] to-white bg-clip-text text-[clamp(4.5rem,11vw,12rem)] font-semibold leading-none tracking-[0.28em] text-transparent"
-          style={{
-            fontFamily: 'var(--font-orbitron), Arial, Helvetica, sans-serif',
-          }}
-        >
-          {'PRITHVI'.split('').map((char) => (
-            <span key={char} className="hero-title-char inline-block">
-              {char}
-            </span>
-          ))}
-        </h1>
+  className="flex flex-wrap justify-center bg-gradient-to-r from-white via-[#f7d77a] to-white bg-clip-text text-center text-[clamp(4rem,10vw,11rem)] font-bold leading-none text-transparent"
+  style={{
+    fontFamily: 'var(--font-orbitron), Arial, Helvetica, sans-serif',
+    letterSpacing: '0.25em',
+  }}
+>
+  {'PRITHVI'.split('').map((char, index) => (
+    <span
+      key={index}
+      className="hero-title-char inline-block"
+    >
+      {char}
+    </span>
+  ))}
+</h1>
 
-        <p className="hero-fade mt-8 max-w-2xl text-base leading-8 text-white/80 md:text-lg">
-          A journey through 9 unique worlds, crafted with code, creativity and a
-          passion for immersive experiences.
+        <p className="hero-fade mt-4 max-w-2xl text-base leading-8 text-white/80 md:text-l">
+          {/* A journey through 9 unique worlds, crafted with code, creativity and a
+          passion for immersive experiences. */}
         </p>
 
-        <motion.button
-          type="button"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.96 }}
-          className="hero-fade mt-8 inline-flex items-center gap-3 rounded-full border border-white/20 bg-white/5 px-7 py-4 text-sm font-medium text-white shadow-2xl backdrop-blur-xl"
-          data-cursor
-        >
-          <Play size={16} fill="white" />
-          Watch Trailer
-        </motion.button>
+        
       </div>
+      
 
       <div className="absolute bottom-24 left-1/2 z-40 w-full max-w-[1560px] -translate-x-1/2 px-6">
-        <p className="mb-6 text-center text-sm font-medium uppercase tracking-[0.48em] text-white">
+        <p className="mb-16 text-center text-sm font-medium uppercase tracking-[0.48em] text-white">
           <span className="text-[#c8f020]">•</span> Choose Your World{' '}
           <span className="text-[#c8f020]">•</span>
         </p>
@@ -326,6 +338,17 @@ export default function HeroSection() {
       <p className="absolute bottom-8 right-16 z-40 hidden text-sm text-white/50 lg:block">
         © 2024 PRITHVI. All rights reserved.
       </p>
+      {/* <motion.button
+          type="button"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.96 }}
+          className="hero-fade mt-20 inline-flex items-center gap-3 rounded-full border border-white/20 bg-white/5 px-7 py-4 text-sm font-medium text-white shadow-2xl backdrop-blur-xl"
+          data-cursor
+        >
+          <Play size={16} fill="white" />
+          Watch Trailer
+        </motion.button> */}
+      
     </section>
   );
 }

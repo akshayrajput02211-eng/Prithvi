@@ -241,7 +241,7 @@ export default function ProsSection() {
         ref={earthRef}
         src="/images/pro/earth.png"
         alt="Beautiful Earth"
-        className="absolute right-[-12vw] top-[-4vw] w-[76vw] max-w-[1200px] select-none object-contain opacity-95"
+        className="absolute right-[-12vw] rotate-[-60deg] top-[-4vw] w-[76vw] max-w-[1200px] select-none object-contain opacity-95"
       />
 
       <div className="relative z-10 mx-auto max-w-[1500px]">

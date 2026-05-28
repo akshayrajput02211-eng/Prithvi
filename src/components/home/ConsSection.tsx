@@ -110,90 +110,94 @@ export default function ConsSection() {
   const earthRef = useRef<HTMLImageElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  useEffect(() => {
-    if (!sectionRef.current) return;
+useEffect(() => {
+  if (!sectionRef.current || !earthRef.current) return;
 
-    const ctx = gsap.context(() => {
-      gsap.to(earthRef.current, {
-        keyframes: [
-          { x: -2, duration: 0.1 },
-          { x: 2, duration: 0.1 },
-          { x: -1, duration: 0.1 },
-          { x: 1, duration: 0.1 },
-          { x: 0, duration: 0.1 },
-        ],
-        repeat: -1,
-        repeatDelay: 2.2,
-        ease: 'none',
-      });
+  const ctx = gsap.context(() => {
 
-      gsap.fromTo(
-        '.cons-heading-line',
-        { x: -50, opacity: 0, skewX: -4 },
-        {
-          x: 0,
-          opacity: 1,
-          skewX: 0,
-          duration: 0.9,
-          stagger: 0.12,
-          ease: 'back.out(1.8)',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 72%',
-          },
-        }
-      );
+    // EARTH FLOAT ANIMATION
+    gsap.to(earthRef.current, {
+      x: 10,
+      y: -6,
+      rotation: 1,
+      duration: 3,
+      repeat: -1,
+      yoyo: true,
+      ease: "sine.inOut",
+    });
 
-      gsap.fromTo(
-        '.cons-issue',
-        { x: 80, opacity: 0 },
-        {
-          x: 0,
-          opacity: 1,
-          duration: 0.75,
-          stagger: 0.12,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: '.cons-issues-list',
-            start: 'top 80%',
-          },
-        }
-      );
+    // HEADING ANIMATION
+    gsap.fromTo(
+      '.cons-heading-line',
+      { x: -50, opacity: 0, skewX: -4 },
+      {
+        x: 0,
+        opacity: 1,
+        skewX: 0,
+        duration: 0.9,
+        stagger: 0.12,
+        ease: 'back.out(1.8)',
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top 72%',
+        },
+      }
+    );
 
-      gsap.fromTo(
-        '.cons-card',
-        { y: 70, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.75,
-          stagger: 0.1,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: '.cons-cards-grid',
-            start: 'top 86%',
-          },
-        }
-      );
+    // ISSUES LIST
+    gsap.fromTo(
+      '.cons-issue',
+      { x: 80, opacity: 0 },
+      {
+        x: 0,
+        opacity: 1,
+        duration: 0.75,
+        stagger: 0.12,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: '.cons-issues-list',
+          start: 'top 80%',
+        },
+      }
+    );
 
-      gsap.fromTo(
-        '.cons-quote-panel',
-        { y: 50, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.85,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: '.cons-quote-panel',
-            start: 'top 88%',
-          },
-        }
-      );
-    }, sectionRef);
+    // CARDS
+    gsap.fromTo(
+      '.cons-card',
+      { y: 70, opacity: 0 },
+      {
+        y: 0,
+        opacity: 1,
+        duration: 0.75,
+        stagger: 0.1,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: '.cons-cards-grid',
+          start: 'top 86%',
+        },
+      }
+    );
 
-    return () => ctx.revert();
-  }, []);
+    // QUOTE PANEL
+    gsap.fromTo(
+      '.cons-quote-panel',
+      { y: 50, opacity: 0 },
+      {
+        y: 0,
+        opacity: 1,
+        duration: 0.85,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: '.cons-quote-panel',
+          start: 'top 88%',
+        },
+      }
+    );
+
+  }, sectionRef);
+
+  return () => ctx.revert();
+}, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
