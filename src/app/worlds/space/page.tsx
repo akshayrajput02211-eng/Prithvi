@@ -1,5 +1,14 @@
-import WorldPageTemplate from '@/components/worlds/WorldPageTemplate';
-
+import SpaceHomeSection from "@/components/worlds/space/SpaceHomeSection";
+import SpaceProsSection from "@/components/worlds/space/SpaceProsSection";
+import SpaceConsSection from "@/components/worlds/space/SpaceConsSection";
+ 
 export default function SpacePage() {
-  return <WorldPageTemplate worldId="space" />;
+  return (
+    <>
+      <SpaceHomeSection />
+      <SpaceProsSection />
+      <SpaceConsSection />
+    </>
+  );
 }
+ 
