@@ -209,32 +209,27 @@ export default function SpaceProsSection() {
       });
  
       // 4. COUNT-UP for stat numbers
-      gsap.utils.toArray<HTMLElement>('.pros-count').forEach((el) => {
-        const target   = parseFloat(el.dataset.target   ?? '0');
-        const suffix   = el.dataset.suffix   ?? '';
-        const decimals = parseInt(el.dataset.decimals   ?? '0', 10);
- 
-        gsap.fromTo(
-          { val: 0 },
-          { val: target },
-          {
-            val: target,
-            duration: 1.8,
-            ease: 'power2.out',
-            onUpdate() {
-              // `this` targets are the tweened object
-              const tweenedVal = (this as gsap.core.Tween).targets()[0] as { val: number };
-              el.textContent = tweenedVal.val.toFixed(decimals) + suffix;
-            },
-            scrollTrigger: {
-              trigger: el,
-              start: 'top 88%',
-              once: true,
-            },
-          }
-        );
-      });
- 
+     gsap.utils.toArray<HTMLElement>('.pros-count').forEach((el) => {
+  const target = parseFloat(el.dataset.target ?? '0');
+  const suffix = el.dataset.suffix ?? '';
+  const decimals = parseInt(el.dataset.decimals ?? '0', 10);
+
+  const obj = { val: 0 };
+
+  gsap.to(obj, {
+    val: target,
+    duration: 1.8,
+    ease: 'power2.out',
+    onUpdate: () => {
+      el.textContent = obj.val.toFixed(decimals) + suffix;
+    },
+    scrollTrigger: {
+      trigger: el,
+      start: 'top 88%',
+      once: true,
+    },
+  });
+});
       // 5. QUOTE PANEL fade up
       gsap.fromTo(
         '.pros-quote-panel',
